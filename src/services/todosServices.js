@@ -28,10 +28,11 @@ const updateToDo = (id, newToDo, username) => {
       return todo;
     });
 
-  delete updateToDo.created_at;
-  delete updateToDo.id;
+  const returnUpdatedToDo = { ...updatedToDo };
+  delete returnUpdatedToDo.created_at;
+  delete returnUpdatedToDo.id;
 
-  return updatedToDo;
+  return returnUpdatedToDo;
 };
 
 const setToDoAsDone = (username, id) => {
