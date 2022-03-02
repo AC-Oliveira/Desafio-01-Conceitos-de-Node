@@ -1,60 +1,70 @@
 const users = require('../db/dbmock');
+const { v4: uuidv4 } = require('uuid');
 
-const appendUserToDo = (user, username, todo) => {
-  if (user.username === username) user.todos.push(todo);
+const addUser = (user) => {
+  const userToAdd = {
+    ...user, todos: [], id: uuidv4(), done: false
+  };
+  users.push(userToAdd);
+  return userToAdd;
 };
 
-const updateToDo = (id, todo, username) => {
-  let index;
-  const { todos } = users.find((user, indexOfUser) => {
-    if (user.username === username) {
-      user.todos.forEach((userToDo, indexOfToDo) => {
-        if (userToDo.id === id) {
-          index = indexOfToDo;
-          users[indexOfUser].todos = [
-            ...user.todos.slice(0, indexOfToDo), todo, ...user.todos.slice(indexOfToDo + 1)];
-        }
-      });
-    }
-    return user.username === username;
-  });
+const appendUserToDo = (username, todo) => {
+  const modifiedToDo = {
+    ...todo, done: false, created_at: new Date().toISOString(), id: uuidv4()
+  };
+  const userIndex = users.map((user) => user.username).indexOf(username);
 
-  return todos[index];
+  users[userIndex].todos.push(modifiedToDo);
+  return modifiedToDo;
+};
+
+const findUserToDos = (username) => {
+  const { todos } = users.find((user) => user.username === username);
+  return todos;
+};
+
+const updateToDo = (id, newToDo, username) => {
+  let updatedToDo = {};
+  const userIndex = users.map((user) => user.username).indexOf(username);
+  users[userIndex].todos = users[userIndex]
+    .todos.map((todo) => {
+      if (todo.id === id) {
+        updatedToDo = { ...todo, ...newToDo };
+        return updatedToDo;
+      }
+      return todo;
+    });
+
+  delete updateToDo.created_at;
+  delete updateToDo.id;
+
+  return updatedToDo;
 };
 
 const setToDoAsDone = (username, id) => {
-  let index;
-  const { todos } = users.find((user, indexOfUser) => {
-    if (user.username === username) {
-      user.todos.forEach((todo, indexOfToDo) => {
-        index = indexOfToDo;
-        if (todo.id === id) users[indexOfUser].todos[indexOfToDo].done = true;
-      });
+  let doneToDo = {};
+  const userIndex = users.map((user) => user.username).indexOf(username);
+  users[userIndex].todos = users[userIndex].todos.map((todo) => {
+    if (todo.id === id) {
+      doneToDo = { ...todo, done: true };
+      return doneToDo;
     }
-    return user.username === username;
+    return todo;
   });
-
-  return todos[index];
+  return doneToDo;
 };
 
-const taskDelete = (username, id) => {
-  users.forEach((user, indexOfUser) => {
-    if (user.username === username) {
-      user.todos.forEach((todo, indexOfToDo) => {
-        if (todo.id === id) {
-          users[indexOfUser].todos = [
-            ...users[indexOfUser].todos.slice(0, indexOfToDo),
-            ...users[indexOfUser].todos.slice(indexOfToDo + 1)
-          ];
-        }
-      });
-    }
-  });
+const toDoDelete = (username, id) => {
+  const userIndex = users.map((user) => user.username).indexOf(username);
+  users[userIndex].todos = users[userIndex].todos.filter((todo) => todo.id !== id);
 };
 
 module.exports = {
+  addUser,
   appendUserToDo,
+  findUserToDos,
   updateToDo,
   setToDoAsDone,
-  taskDelete
+  toDoDelete
 };

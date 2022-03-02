@@ -1,12 +1,15 @@
 const users = require('../db/dbmock');
 
 function checksExistsUserAccount(request, response, next) {
-  const { body: { username: bodyUsername }, url, headers: { username: headersUsername } } = request;
+  const {
+    body: { username: bodyUsername },
+    originalUrl, headers: { username: headersUsername }
+  } = request;
   const username = bodyUsername || headersUsername;
   const userExists = users.some((user) => user.username === username);
 
-  if (userExists && url === '/users') return response.status(400).json({ error: 'User already exists!' });
-  if (!userExists && url.includes('/todos')) return response.status(404).json({ error: 'User not found!' });
+  if (userExists && originalUrl === '/users') return response.status(400).json({ error: 'User already exists!' });
+  if (!userExists && originalUrl.includes('/todos')) return response.status(404).json({ error: 'User not found!' });
 
   return next();
 }
