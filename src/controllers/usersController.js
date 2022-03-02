@@ -1,4 +1,4 @@
-const { addUser } = require('../services/tasksServices');
+const { addUser } = require('../services/usersServices');
 const users = require('../db/dbmock');
 
 const getAllUsers = (_request, response) => {

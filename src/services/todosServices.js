@@ -1,14 +1,6 @@
 const users = require('../db/dbmock');
 const { v4: uuidv4 } = require('uuid');
 
-const addUser = (user) => {
-  const userToAdd = {
-    ...user, todos: [], id: uuidv4(), done: false
-  };
-  users.push(userToAdd);
-  return userToAdd;
-};
-
 const appendUserToDo = (username, todo) => {
   const modifiedToDo = {
     ...todo, done: false, created_at: new Date().toISOString(), id: uuidv4()
@@ -61,7 +53,6 @@ const toDoDelete = (username, id) => {
 };
 
 module.exports = {
-  addUser,
   appendUserToDo,
   findUserToDos,
   updateToDo,
