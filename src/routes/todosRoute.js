@@ -1,14 +1,18 @@
 const express = require('express');
 const {
-  getAllToDos, addToDoToList, updateToDoController, doneToDoController, deleteToDoController
+  getAllToDosController,
+  addToDoToListController,
+  updateToDoController,
+  doneToDoController,
+  deleteToDoController
 } = require('../controllers/todosController');
 const { checksExistsUserAccount, checkExistsToDo } = require('../middlewares/middlewares');
 
 const router = express.Router();
 
-router.get('/', checksExistsUserAccount, getAllToDos);
+router.get('/', checksExistsUserAccount, getAllToDosController);
 
-router.post('/', checksExistsUserAccount, addToDoToList);
+router.post('/', checksExistsUserAccount, addToDoToListController);
 
 router.put('/:id', checksExistsUserAccount, checkExistsToDo, updateToDoController);
 

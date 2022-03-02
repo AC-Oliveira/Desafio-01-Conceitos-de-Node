@@ -2,14 +2,14 @@ const {
   findUserToDos, appendUserToDo, updateToDo, setToDoAsDone, toDoDelete
 } = require('../services/tasksServices');
 
-const getAllToDos = (request, response) => {
+const getAllToDosController = (request, response) => {
   const { username } = request.headers;
   const todos = findUserToDos(username);
 
   response.status(200).json(todos);
 };
 
-const addToDoToList = (request, response) => {
+const addToDoToListController = (request, response) => {
   const { headers: { username }, body: userToDo } = request;
   const addedToDo = appendUserToDo(username, userToDo);
 
@@ -38,5 +38,9 @@ const deleteToDoController = (request, response) => {
 };
 
 module.exports = {
-  getAllToDos, addToDoToList, updateToDoController, doneToDoController, deleteToDoController
+  getAllToDosController,
+  addToDoToListController,
+  updateToDoController,
+  doneToDoController,
+  deleteToDoController
 };
